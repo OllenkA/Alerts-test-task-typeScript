@@ -1,41 +1,32 @@
 import React from 'react';
 import './../App.css';
 import {connect} from "react-redux";
-import {addWindow, IAddWindow, IStyles, ADD_WINDOW} from "../redux/reducer";
+import {addWindow, IStyles, IArrayAlerts} from "../redux/reducer";
 import {AppStateType} from "../redux/store";
 import Popup from "./Popup";
+import {Dispatch} from "redux";
 
-interface IArrayAlerts {
-    id: number
-    title: 'Success' | 'Warning' | 'Error'
-    styles: { border: string }
-}
 
-interface IProps {
+interface IMapStateProps {
     alerts: Array<IArrayAlerts>
-    addWindow: (styles: {border: string}) => void
 }
 
-// export interface IAddWindow {
-//     type: typeof ADD_WINDOW
-//     styles: IStyles
-//     // popUpAlerts: Array<IArrayPopUpAlerts>
-// }
+interface IMapDispatchProps {
+    addWind: (styles: IStyles) => void
+}
 
+type CommonProps = IMapStateProps & IMapDispatchProps
 
-// interface IReducerState {
-//     alerts: Array<IArrayAlerts>
-// }
-const MainContent = (props: IProps) => {
+const MainContent = ({alerts, addWind}: CommonProps) => {
 
     return <main>
         <div className="main">
-            {props.alerts.map(
+            {alerts.map(
                 (al, i) => (<button
                     key={i}
                     className='buttons' style={al.styles}
                     onClick={() => {
-                        props.addWindow(al.styles)
+                        addWind(al.styles)
                     }}>
                     {al.title}
                 </button>))}
@@ -44,6 +35,11 @@ const MainContent = (props: IProps) => {
     </main>
 };
 
-const mapStateToProps = (state: AppStateType) => ({alerts: state.alert.alerts});
+const mapStateToProps = (state: AppStateType): IMapStateProps => ({alerts: state.alert.alerts});
+const mapDispatchToProps = (dispatch: Dispatch): IMapDispatchProps => {
+    return {
+        addWind: (styles: IStyles) => dispatch(addWindow(styles))
+    }
+};
 
-export default connect(mapStateToProps, {addWindow})(MainContent);
+export default connect(mapStateToProps, mapDispatchToProps)(MainContent);

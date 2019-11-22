@@ -6,7 +6,6 @@ const DELETE_POP_UP = 'DELETE_POP_UP';
 export interface IAddWindow {
     type: typeof ADD_WINDOW
     styles: IStyles
-    // popUpAlerts: Array<IArrayPopUpAlerts>
 }
 
 export interface IStyles {
@@ -19,20 +18,18 @@ interface IDeletePopUp {
 
 export interface IReducerState {
     alerts: Array<IArrayAlerts>
-    popUpAlerts: IArrayPopUpAlerts[]
+    popUpAlerts: Array<IArrayPopUpAlerts> /*IArrayPopUpAlerts[]*/
 }
 
 export interface IArrayPopUpAlerts {
     id: number
     text?: string
-    // title: 'Success' | 'Warning' | 'Error'
     styles: { border: string }
 }
 
-interface IArrayAlerts {
+export interface IArrayAlerts {
     id: number
     title: 'Success' | 'Warning' | 'Error'
-    // styles: { border: string }
     styles: IStyles
 }
 
@@ -43,13 +40,11 @@ const initialState: IReducerState = {
         {id: 3, title: 'Error', styles: {border: '2px solid red'}}
     ],
     popUpAlerts: []
-
 };
 
 const alertReducer = (state = initialState, action: IAddWindow | IDeletePopUp): IReducerState => {
     switch (action.type) {
         case ADD_WINDOW: {
-            // let newPopup = state.alerts.find(al => (al.title === action.title));
             let newPopup = {
                 id: state.popUpAlerts.length,
                 styles: action.styles,
@@ -58,17 +53,13 @@ const alertReducer = (state = initialState, action: IAddWindow | IDeletePopUp): 
             return {
                 ...state,
                 popUpAlerts: [...state.popUpAlerts, newPopup]
-
-                    // {id: 0, title: "Error", styles: {border: '2px solid blue'},
-                        // styles: {styles} = newPopup,
-                        // id: state.popUpAlerts.length,
             }
         }
         case DELETE_POP_UP: {
             let newArray = state.popUpAlerts.filter(pop => (pop.id ));
             return {
                 ...state,
-                popUpAlerts: [...state.popUpAlerts]
+                popUpAlerts: newArray
             }
         }
         default:
@@ -76,9 +67,8 @@ const alertReducer = (state = initialState, action: IAddWindow | IDeletePopUp): 
     }
 };
 
-export const addWindowTC = (title: string) => async(dispatch: Dispatch) => {
-
-};
+// export const addWindowTC = (title: string) => async(dispatch: Dispatch) => {
+// };
 
 // export const getPosts = () => async (dispatch) => {
 //     const result = await api.getPosts();
@@ -87,7 +77,7 @@ export const addWindowTC = (title: string) => async(dispatch: Dispatch) => {
 //     }
 // };
 
-export const addWindow = (styles: string) => ({type: ADD_WINDOW, styles});
-export const deletePopUp = () => ({type: DELETE_POP_UP});
+export const addWindow = (styles: IStyles): IAddWindow => ({type: ADD_WINDOW, styles});
+// export const deletePopUp = () => ({type: DELETE_POP_UP});
 
 export default alertReducer;
